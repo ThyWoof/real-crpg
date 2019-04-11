@@ -2,12 +2,16 @@ import random as rd
 import datetime as dt
 import pickle
 import resource
+import inventory as inven
+import status
+import monster as mob
+import item
 
 
 class Character:
     def __init__(self, name, cls, race, stat, value, description):  # 기본적인 캐릭터의 정보생성자입니다.
-        self.status = Status(name, cls, race, stat[0], stat[1], stat[2],stat[3], stat[4], stat[5], value, description)
-        self.inventory = Inventory()
+        self.status = status.Status(name, cls, race, stat[0], stat[1], stat[2],stat[3], stat[4], stat[5], value, description)
+        self.inventory = inven.Inventory()
         self.action = Action()
 
     def show_info(self):  # /캐릭터확인 명령어를위한 함수입니다.
@@ -20,392 +24,13 @@ class Character:
     def check_body(self, monster):  # 몬스터 루팅을위한 함수
         self.action.check_body(self.inventory, monster)
 
-    def equip(self, item):
+    def equip(self, item):  # 무기장비를 위한함수입니다.
         if item.type == 'weapon':
             self.inventory.item_setter(self.status.weapon_unequip())
             self.status.equip(self.inventory.item_getter(item.name))
 
-class Status:
-    def __init__(self, name, cls, race, str, dex, con, wis, int, cha, value, description):
-        self.name = name
-        self.str = str
-        self.str_correction = 0
-        self.dex = dex
-        self.dex_correction = 0
-        self.con = con
-        self.con_correction = 0
-        self.wis = wis
-        self.wis_correction = 0
-        self.int = int
-        self.int_correction = 0
-        self.cha = cha
-        self.cha_correction = 0
-        self.armor = 0
-        self.cur_exp = 0
-        self.cls = cls  # 직업을 담는 변수입니다.
-        self.race = race  # 종족을 담는 변수입니다.
-        self.equip_w = Weapon('주먹') # 장비하고있는 무기
-        self.equip_a = Armor('없음')
-        self.equip_s = Armor('없음')
-        self.battle_stat = False  # 전투중인지 아닌지를 표현합니다.
-        self.health_stat = []  # 적용중인 약화효과를 표현합니다.
-        self.value = value  # 가치관을 담는 변수입니다.
-        self.whole_penalty = 0  # 현재 적용중인 패널티를 담는 변수입니다.
-        self.temp_whole_penalty = 0
-        self.damage_correction = 0
-        self.description = description
-        self.attack_range = []
-        self.micro_attack = False
-        if cls == '전사':
-            self.max_hp = self.con + 10
-            self.damage_dice = 10
-            self.weight_limit = self.str + 12
-        elif cls == '드루이드':
-            self.max_hp = self.con + 6
-            self.damage_dice = 6
-            self.weight_limit = self.str + 6
-        elif cls == '음유시인':
-            self.max_hp = self.con + 6
-            self.damage_dice = 6
-            self.weight_limit = self.str + 9
-        elif cls == '마법사':
-            self.max_hp = self.con + 4
-            self.damage_dice = 4
-            self.weight_limit = self.str + 7
-        elif cls == '사제':
-            self.max_hp = self.con + 8
-            self.damage_dice = 6
-            self.weight_limit = self.str + 10
-        elif cls == '사냥꾼':
-            self.max_hp = self.con + 8
-            self.damage_dice = 8
-            self.weight_limit = self.str + 11
-        elif cls == '성기사':
-            self.max_hp = self.con + 10
-            self.damage_dice = 10
-            self.weight_limit = self.str + 12
-        elif cls == '도적':
-            self.max_hp = self.con + 6
-            self.damage_dice = 8
-            self.weight_limit = self.str + 9
-        self.cur_hp = self.max_hp
-        self.cur_weight = 0
-        self.level = 1
-        self.basic_stat_correction_updater()
+        elif itme.type == 'armor':
 
-    def level_up(self):
-        if self.level == 10:
-            print('더이상 레벨업 할수 없어보이는군요..')
-        else:
-            reduce = self.level + 7
-            if reduce > self.cur_exp:
-                print('경험치가 부족해보입니다...')
-            else:
-                self.cur_exp -= reduce
-                print('근력 : {} ({})\n'
-              '민첩 : {} ({})\n'
-              '체력 : {} ({})\n'
-              '지혜 : {} ({})\n'
-              '지식 : {} ({})\n'
-              '매력 : {} ({})\n'.format(self.str, self.stat_correction_getter(self.str_correction),
-                                      self.dex, self.stat_correction_getter(self.dex_correction),
-                                      self.con, self.stat_correction_getter(self.con_correction),
-                                      self.wis, self.stat_correction_getter(self.wis_correction),
-                                      self.int, self.stat_correction_getter(self.int_correction),
-                                      self.cha, self.stat_correction_getter(self.cha_correction)))
-                while True:
-                    answer = input('이중 어느것을 올리시겠습니까? : ')
-                    for i in resource.status_name:
-                        if i in answer:
-                            answer = i
-                    if self.stat_controller(answer, 1):
-                        print('{} 능력치가 1 올라갑니다.'.format(i))
-                        break
-        self.level += 1
-
-    def show_status(self, inventory):
-        print('이름 : {}\n'
-              '종족 : {}\n'
-              '가치관 : {}\n'
-              '레벨 : {}\n'
-              'HP : {} / {}\n'
-              '근력 : {} ({})\n'
-              '민첩 : {} ({})\n'
-              '체력 : {} ({})\n'
-              '지혜 : {} ({})\n'
-              '지식 : {} ({})\n'
-              '매력 : {} ({})\n'
-              '피해주사위 : d{}\n'
-              '피해 보정치 : {}\n'
-              '소지 경험치 : {}\n'
-              '소지 무게 : {} / {}\n'
-              '소지 금 : {}\n'
-              '장갑 : {}\n'
-              '적용중인 약화효과 : {}'.format(self.name, self.race, self.value, self.level, self.cur_hp, self.max_hp,
-                                      self.str, self.stat_correction_getter(self.str_correction),
-                                      self.dex, self.stat_correction_getter(self.dex_correction),
-                                      self.con, self.stat_correction_getter(self.con_correction),
-                                      self.wis, self.stat_correction_getter(self.wis_correction),
-                                      self.int, self.stat_correction_getter(self.int_correction),
-                                      self.cha, self.stat_correction_getter(self.cha_correction),
-                                      self.damage_dice, self.stat_correction_getter(self.damage_correction),
-                                      self.cur_exp, self.cur_weight, self.weight_limit, inventory.money, self.armor, self.weakness_getter()))
-
-    def show_equip_status(self):  # 착용장비를 출력하는 함수입니다.
-        print('무기 : {}\n'
-              '갑옷 : {}\n'
-              '방패 : {}'.format(self.equip_w.name, self.equip_a.name, self.equip_s.name))
-
-    def weakness_controller(self, name, a_o_r):  # 약화효과의 증감을위한 함수입니다.
-        if a_o_r == 'a':
-            if name in self.health_stat:
-                pass
-            else:
-                self.health_stat.append(name)
-                if name == '무기력':
-                    self.stat_correction_controller('근력', -1)
-                elif name == '경련':
-                    self.stat_correction_controller('민첩', -1)
-                elif name == '쇠약':
-                    self.stat_correction_controller('체력', -1)
-                elif name == '당황':
-                    self.stat_correction_controller('지혜', -1)
-                elif name == '얼떨떨':
-                    self.stat_correction_controller('지식', -1)
-                else:
-                    self.stat_correction_controller('매력', -1)
-        else:
-            self.health_stat.remove(name)
-            if name == '무기력':
-                self.stat_correction_controller('근력', 1)
-            elif name == '경련':
-                self.stat_correction_controller('민첩', 1)
-            elif name == '쇠약':
-                self.stat_correction_controller('체력', -1)
-            elif name == '당황':
-                self.stat_correction_controller('지혜', -1)
-            elif name == '얼떨떨':
-                self.stat_correction_controller('지식', -1)
-            else:
-                self.stat_correction_controller('매력', -1)
-
-    def weakness_getter(self):
-        if len(self.health_stat) == 0:
-            return '없음'
-        result = ''
-        for i in self.health_stat:
-            result += i
-            result += ', '
-        return result [:-2]
-
-    def stat_controller(self, name, num):  # 레벨업 등의 사유로 스탯 증감을 위한 함수입니다.
-        if name == '근력':
-            if self.str == 18 and u_o_d == 'u':
-                print('더이상 힘을 올릴수 없습니다.')
-                return False
-            else:
-                self.str += num
-                self.weight_limit += num
-        elif name == '민첩':
-            if self.dex == 18 and u_o_d == 'u':
-                print('더이상 민첩을 올릴수 없습니다.')
-                return False
-            else:
-                self.dex += num
-        elif name == '체력':
-            if self.con == 18 and u_o_d == 'u':
-                print('더이상 체력을 올릴수 없습니다.')
-                return False
-            else:
-                self.con += num
-                self.max_hp += num
-                self.cur_hp = self.max_hp
-        elif name == '지식':
-            if self.int == 18 and u_o_d == 'u':
-                print('더이상 자식을 올릴수 없습니다.')
-                return False
-            else:
-                self.int += num
-        elif name == '지혜':
-            if self.wis == 18 and u_o_d == 'u':
-                print('더이상 지혜를 올릴수 없습니다.')
-                return False
-            else:
-                self.wis += num
-        elif name == '매력':
-            if self.cha == 18 and u_o_d == 'u':
-                print('더이상 매력을 올릴수 없습니다.')
-                return False
-            else:
-                self.cha += num
-        else:
-            return False
-        self.basic_stat_correction_updater()
-        return True
-
-    def basic_stat_correction_updater(self):  # 통합적 스탯 보정 증감을 위한 함수입니다.
-        def cal(num):
-            correction = 0
-            if num == 18:
-                correction += 3
-            elif num > 15:
-                correction += 2
-            elif num > 12:
-                correction += 1
-            elif num < 9:
-                correction -= 1
-            elif num < 6:
-                correction -= 2
-            elif num < 4:
-                correction -= 3
-            return correction
-        self.str_correction = cal(self.str)
-        self.dex_correction = cal(self.dex)
-        self.con_correction = cal(self.con)
-        self.int_correction = cal(self.int)
-        self.wis_correction = cal(self.wis)
-        self.cha_correction = cal(self.cha)
-
-    def stat_correction_controller(self, name, num):  # 스탯보정을위한 추가 함수입니다.
-        if name == '근력':
-            self.str_correction += num
-        elif name == '민첩':
-            self.dex_correction += num
-        elif name == '체력':
-            self.con_correction += num
-        elif name == '지식':
-            self.int_correction += num
-        elif name == '지혜':
-            self.wis_correction += num
-        else:
-            self.cha_correction += num
-
-    def stat_correction_getter(self, num):
-        if num == 0:
-            return '0'
-        elif num > 0:
-            return '+' + str(num)
-        else:
-            return str(num)
-
-    def equip(self, item):  # 무기를 장비하는 함수입니다. 이미 장비하고있는게있다면 해당장비를 반환합니다.
-        if item.type == 'weapon':
-            self.equip_w = item
-            self.attack_range_controller(item)
-            if '정밀' in item.tag:
-                self.micro_attack_changer()
-        elif item.type == 'armor':
-            self.equip_a = item
-            self.armor_controller(item.armor)
-            if item.tag == '불편':
-                self.penalty_controller(1)
-        elif item.type == 'shield':
-            self.equip_s = item
-            self.armor_controller(item.armor)
-            if item.tag == '불편':
-                self.penalty_controller(1)
-
-    def weapon_unequip(self):  # 무기 해제 함수입니다.
-        temp = self.equip_w
-        self.equip(Weapon('주먹'))
-        if '정밀' in temp.tag:
-            self.micro_attack_changer()
-        if temp.name == '주먹':
-            return
-        return temp
-
-    def micro_attack_changer(self):
-        if self.micro_attack:
-            self.micro_attack = False
-        else:
-            self.micro_attack = True
-
-    def armor_unequip(self):  # 갑옷 해제 함수입니다.
-        temp = self.equip_a
-        self.equip(Armor('없음'))
-        self.armor_controller(-temp.armor)
-        if temp.tag == '불편':
-            self.penalty_controller(-1)
-        if temp.name == '없음':
-            return
-        return temp
-
-    def shiled_unequip(self):  # 방패 해제 함수입니다.
-        temp = self.equip_s
-        self.equip(Shild('없음'))
-        self.armor_controller(-temp.armor)
-        if temp.tag == '불편':
-          self.penalty_controller(-1)
-        if temp.name == '없음':
-            return
-        return temp
-
-    def battle_status_changer(self):
-        if self.battle_stat:
-            self.battle_stat = False
-        else:
-            self.battle_stat =  True
-
-    def armor_controller(self, num):  # 장갑의 증감을 다루는 함수입니다.
-        self.armor += num
-
-    def damage_correction_controller(self, num):  # 데미지 보정의 증감을 담당하는 함수입니다.
-        self.damage_correction += num
-
-    def damage_dice_controller(self, num):  # 데미지 다이스를 조정하는 함수이며 인수로 받은값으로 변환합니다.
-        self.damage_dice = num
-
-    def maxhp_controller(self, num):  # 최대 체력을 조정하는 함수입니다.
-        self.max_hp += num
-
-    def curhp_controller(self, action, num):  # 현재 체력을 조정하는 함수입니다. 0 이되면 황천길 액션을 호출합니다.
-        self.cur_hp += num
-        if self.cur_hp <= 0:
-            action.death(self)
-
-    def curexp_controller(self, num):  # 현재 경험치를 조정하는 함수입니다.
-        self.cur_exp += num
-
-    def weightlimit_controller(self, num):  # 최대 소지무게를 조정하는 함수입니다.
-        self.weight_limit += num
-
-    def curweight_controller(self, num):  # 현재 소지무게를 조정하는 함수입니다.
-        self.cur_weight += num
-
-    def attack_range_controller(self, item):  # 무기를 장착할때 공격가능 거리를 변결해주는 함수입니다.
-        self.attack_range = item.range
-
-    def action_controller(self, action):  # 레벨업등으로 액션이 추가될때 사용되는 함수입니다.
-        self.action.append(action.name)
-
-    def penalty_controller(self, num):  # 전체 판정의 패널티를 조종하는 함수입니다.
-        self.whole_penalty += num
-
-
-class Inventory:  # 인벤토리 클래스입니다.
-    def __init__(self):  # 생성자로 space속성을 추가합니다.
-        self.space = []
-        self.money = 0
-
-    def item_getter(self, name):  # 가방에서 아이템을 꺼내는 함수입니다.
-        for idx, item in enumerate(self.space):
-            if item.name == name:
-                return self.space.pop(idx)
-        return False
-
-    def item_setter(self, item):  # 가방에 아이템을 집어넣는 함수입니다.
-        self.space.append(item)
-
-    def show_inventory(self):  # 가방의 내용물을 출력해주는 함수입니다.
-        for item in self.space:
-            item.show_info()
-
-    def money_controller(self, num):  # 소지금의 증감을 담당하는 함수입니다.
-        temp = self.money
-        if temp + num < 0:
-            print('소지금이 부족한듯싶군요...')
-        else:
-            self.money = temp
 
 
 class Action:  # 모든 액션을 담는 클래스입니다.
@@ -551,177 +176,6 @@ class Action:  # 모든 액션을 담는 클래스입니다.
             for i in op.stuff:
                 inventory.item_setter(i)
                 print('{} 를 얻었습니다. '.format(i.name))
-
-
-class Equipment:
-
-    def take_on(self):
-        if self.equip_stat:
-            print('이미 해당 장비를 착용중입니다.')
-        else:
-            self.equip_stat = True
-            print('{} 을/를 장비했습니다.')
-
-    def take_off(self):
-        if self.equip_stat:
-            self.equip_stat = False
-        else:
-            print('해당 장비를 입고있지 않습니다.')
-
-    def get_this(self):
-        print('{} 이/가 가방에 추가되었습니다.'.format(name))
-
-    def show_info(self):
-        print('{} ) 장갑:{} {}닢 무게:{} {}'.format(self.name, self.armor, self.price, self.weight, self.tag))
-
-
-class Armor(Equipment):
-    def __init__(self, name):
-        self.name = name
-        self.equip_stat = False
-        self.type = 'armor'
-        self.tag = ''
-        for i in resource.armor_list:
-            if name == i[0]:
-                self.armor = i[1]
-                self.price = i[2]
-                self.weight = i[3]
-                if len(i) > 4:
-                    self.tag = i[4]
-                else: self.tag = ''
-
-
-class Shiled(Equipment):
-    def __init__(self, name):
-        self.name = name
-        self.equip_stat = False
-        self.type = 'shiled'
-        self.tag = ''
-        for i in resource.armor_list:
-            if name == i[0]:
-                self.armor = i[1]
-                self.price = i[2]
-                self.weight = i[3]
-                if len(i) > 4:
-                    self.tag = i[4]
-                else: self.tag = ''
-
-
-class Weapon(Equipment):
-    def __init__(self, name):
-        self.name = name
-        self.equip_stat = False
-        self.tag = []
-        self.type ='weapon'
-        for i in resource.weapon_list:
-            if name == i[0]:
-                self.damage = i[-3]
-                self.price = i[-2]
-                self.weight = i[-1]
-                self.range = i[1]
-                if len(i) > 5:
-                    idx = 2
-                    for j in range(len(i) - 5):
-                        self.tag.append(i[idx])
-                        idx += 1
-                else:
-                    self.tag = ''
-
-    def show_info(self):
-        range = ''
-        if len(self.range) > 1:
-            for i in self.range:
-                range += i
-                range +=', '
-            range = range[:-2]
-        else:
-            range = self.range[0]
-
-        print('{} ) 공격범위: {} {} 닢 무게:{}'.format(self.name, range, self.price, self.weight))
-
-
-class Item:
-    def __init__(self, name):
-        self.name = name
-        for i in resource.item_list:
-            if name == i[0]:
-                self.pcs = i[1]
-                self.price = i[2]
-                self.weight = i[3]
-                self.description = i[-1]
-                if i[4] == '느림':
-                    self.late = True
-                else: self.late = False
-        print('{} 이/가 가방에 추가되었습니다.'.format(name))
-
-    def use_this(self):
-        self.pcs -= 1
-        if self.pcs == 0:
-            return False
-        else: return True
-
-    def get_description(self):
-        return self.description
-
-    def show_info(self):  # 정보를 출력하는 함수입니다.
-        print('{}) 수량 : {} 무게: {} {}'.format(self.name, self.pcs, self.weight, self.description))
-
-
-class Monster:
-    def __init__(self, name):
-        self.name = name
-        for i in resource.monster_list:
-            if name == i[0]:
-                self.attack_name = i[1]
-                self.attack_reach = i[2]
-                self.damage_pcs = i[3]
-                self.damage_dice = i[4]
-                self.max_hp = i[5]
-                self.cur_hp = i[5]
-                self.armor = i[6]
-                self.features = []
-                self.dead = False
-                self.stuff = [3, Weapon('레이피어'), Armor('사슬 갑옷')]
-                self.far = None
-                self.add_dam = 0
-                if len(i) > 7:
-                    self.features = i[7:-1]
-
-    def get_cur_hp(self):  # 남은체력을 모호하게 표현해주는 함수입니다.
-        balance = self.cur_hp / self.max_hp * 100
-        if balance == 100:
-            return resource.monster_hp_list[0]
-        elif balance >= 80:
-            return resource.monster_hp_list[1]
-        elif balance >= 60:
-            return resource.monster_hp_list[2]
-        elif balance >= 40:
-            return resource.monster_hp_list[3]
-        elif balance >= 20:
-            return resource.monster_hp_list[4]
-        elif balance > 0:
-            return resource.monster_hp_list[5]
-        else:
-            return resource.monster_hp_list[-1]
-
-    def get_damage(self, damage):
-        correction_damage = damage - self.armor
-        self.cur_hp -= correction_damage
-        if self.cur_hp < 1:
-            self.dead = True
-        if correction_damage < 0:
-            correction_damage = 0
-        return correction_damage
-
-    def coming_for_you(self):
-        if self.far != '한걸음':
-            pass
-
-    def normal_attack(self):  # 일반공격으로 선공당했을때의 함수입니다.
-        pass
-
-    def sneak_attack(self):  # 암습으로 선공당했을때의 함수입니다.
-        pass
 
 
 class Place:
@@ -880,6 +334,7 @@ class Master:
         description += input('마지막으로 모험을 떠나기 전,\n어떤 생활을 해왔는지'
                              '간략하게 작성해 주세요.')
         self.player.append(Character(name, cls, race, result, value, description))
+        self.player[0].equip(item.Item('주먹'))
 
     def what_now(self):  # 마스터의 물음입니다.
         if len(self.cur_monster) > 0:
@@ -944,7 +399,7 @@ class Master:
             self.log.append(Log(string))
 
     def monster_setter(self, name):  # 전투상황에 돌입하게 몬스터를 추가하는 함수입니다.
-        self.cur_monster.append(Monster(name))
+        self.cur_monster.append(mob.Monster(name))
         if self.battle_status:
             pass
         else:
@@ -971,7 +426,9 @@ class Master:
 DM = Master()
 DM.player.append(Character('테스트', '전사', '엘프', [16, 15, 13, 12, 9, 8], '선', '메롱'))
 DM.monster_setter('고블린')
-while True:
-    answer = DM.what_now()
-    if answer == 'end game':
-        break
+
+if __name__ == '__main__':
+    while True:
+        answer = DM.what_now()
+        if answer == 'end game':
+            break
