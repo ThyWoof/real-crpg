@@ -1,3 +1,5 @@
+import item
+
 class Status:
     def __init__(self, name, cls, race, str, dex, con, wis, int, cha, value, description):
         self.name = name
@@ -17,9 +19,9 @@ class Status:
         self.cur_exp = 0
         self.cls = cls  # 직업을 담는 변수입니다.
         self.race = race  # 종족을 담는 변수입니다.
-        self.equip_w = None # 장비하고있는 무기
-        self.equip_a = None
-        self.equip_s = None
+        self.equip_w = item.Weapon('주먹') # 장비하고있는 무기
+        self.equip_a = item.Armor('없음')
+        self.equip_s = item.Shield('없음')
         self.battle_stat = False  # 전투중인지 아닌지를 표현합니다.
         self.health_stat = []  # 적용중인 약화효과를 표현합니다.
         self.value = value  # 가치관을 담는 변수입니다.
@@ -280,7 +282,7 @@ class Status:
 
     def weapon_unequip(self):  # 무기 해제 함수입니다.
         temp = self.equip_w
-        self.equip(Weapon('주먹'))
+        self.equip(item.Weapon('주먹'))
         if '정밀' in temp.tag:
             self.micro_attack_changer()
         if temp.name == '주먹':
@@ -295,17 +297,17 @@ class Status:
 
     def armor_unequip(self):  # 갑옷 해제 함수입니다.
         temp = self.equip_a
-        self.equip(Armor('없음'))
+        if temp.name == '없음':
+            return
+        self.equip(item.Armor('없음'))
         self.armor_controller(-temp.armor)
         if temp.tag == '불편':
             self.penalty_controller(-1)
-        if temp.name == '없음':
-            return
         return temp
 
     def shiled_unequip(self):  # 방패 해제 함수입니다.
         temp = self.equip_s
-        self.equip(Shild('없음'))
+        self.equip(item.Shild('없음'))
         self.armor_controller(-temp.armor)
         if temp.tag == '불편':
           self.penalty_controller(-1)

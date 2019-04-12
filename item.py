@@ -38,7 +38,7 @@ class Armor(Equipment):
                 else: self.tag = ''
 
 
-class Shiled(Equipment):
+class Shield(Equipment):
     def __init__(self, name):
         self.name = name
         self.equip_stat = False
