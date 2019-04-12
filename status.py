@@ -1,4 +1,4 @@
-import item
+from item import *
 
 class Status:
     def __init__(self, name, cls, race, str, dex, con, wis, int, cha, value, description):
@@ -19,9 +19,9 @@ class Status:
         self.cur_exp = 0
         self.cls = cls  # 직업을 담는 변수입니다.
         self.race = race  # 종족을 담는 변수입니다.
-        self.equip_w = item.Weapon('주먹') # 장비하고있는 무기
-        self.equip_a = item.Armor('없음')
-        self.equip_s = item.Shield('없음')
+        self.equip_w = Weapon('주먹') # 장비하고있는 무기
+        self.equip_a = Armor('없음')
+        self.equip_s = Shield('없음')
         self.battle_stat = False  # 전투중인지 아닌지를 표현합니다.
         self.health_stat = []  # 적용중인 약화효과를 표현합니다.
         self.value = value  # 가치관을 담는 변수입니다.

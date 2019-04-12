@@ -137,15 +137,47 @@ class Action:  # 모든 액션을 담는 클래스입니다.
     def action_adder(self, name):  # 사용할수있는 액션을 추가해주는 함수입니다.
         self.have.append(name)
 
-    def check_body(self, inventory, op):  # 죽은 몬스터를 루팅하는 함수입니다.
+    def check_body(self, character, op):  # 죽은 몬스터를 루팅하는 함수입니다.
         money = op.stuff.pop(0)
-        inventory.money_controller(money)
+        character.inventory.money_controller(money)
         print('{} 닢을 얻었습니다.'.format(money))
         if len(op.stuff) > 0:
             for i in op.stuff:
-                inventory.item_setter(i)
+                character.inventory.item_setter(i)
+                character.status.curweight_controller(i.weight)
                 print('{} 를 얻었습니다. '.format(i.name))
+
+
+class Worrior(Action):
+    pass
+
+class Bard(Action):
+    pass
+
+class Rogue(Action):
+    pass
+
+class Mage(Action):
+    pass
+
+class Priest(Action):
+    pass
+
+class Paladin(Action):
+    pass
+
+class Druid(Action):
+    pass
+
+class Hunter(Action):
+    pass
+
 
 
 def random_sentence_printer(list):  # 묘사를 랜덤으로 출력해주는 함수입니다.
     print(rd.choice(list))
+
+def script_reader(list):  # 스크립트를 출력해주는 함수입니다.
+    for i in list:
+        print(i)
+        input()

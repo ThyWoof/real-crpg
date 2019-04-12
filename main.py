@@ -2,29 +2,28 @@ import random as rd
 import datetime as dt
 import pickle
 import resource
-import inventory as inven
-import status
-import monster as mob
-import item
-import action
+from inventory import Inventory
+from status import Status
+from monster import Monster
+from action import Action
 from dice import rollDice
 
 
 class Character:
     def __init__(self, name, cls, race, stat, value, description):  # 기본적인 캐릭터의 정보생성자입니다.
-        self.status = status.Status(name, cls, race, stat[0], stat[1], stat[2],stat[3], stat[4], stat[5], value, description)
-        self.inventory = inven.Inventory()
-        self.action = action.Action()
+        self.status = Status(name, cls, race, stat[0], stat[1], stat[2],stat[3], stat[4], stat[5], value, description)
+        self.inventory = Inventory()
+        self.action = Action()
 
     def show_info(self):  # /캐릭터확인 명령어를위한 함수입니다.
         self.status.show_status(self.inventory)
         self.status.show_equip_status()
 
-    def meleeattack(self, op):  # 근접공격 명령어를위한 함수입니다.
+    def meleeAttack(self, op):  # 근접공격 명령어를위한 함수입니다.
         self.action.meleeAttack(op, self)
 
     def check_body(self, monster):  # 몬스터 루팅을위한 함수
-        self.action.check_body(self.inventory, monster)
+        self.action.check_body(self, monster)
 
     def equip(self, item):  # 무기장비를 위한함수입니다.
         if item.type == 'weapon':
@@ -197,7 +196,7 @@ class Master:
                 monsters = '{} 상태인 {}가 앞에 있습니다.'.format(self.cur_monster[0].get_cur_hp(), self.cur_monster[0].name)
             else:
                 monsters = ''
-                for monster in cur_monster:
+                for monster in self.cur_monster:
                     monsters += '{} 상태인 {}, '.format(monster.get_cur_hp(), monster.name)
                 monsters = monsters[:-2] + ' 가 앞에 있습니다.'
             print(monsters)
@@ -224,12 +223,15 @@ class Master:
                 print('이상입니다.')
             elif string == '/가방확인':
                 self.player[0].inventory.show_inventory()
+            elif string == '/몬스터추가':
+                name = input('name : ')
+                self.monster_setter(name)
 
         else:
             if '근접공격' in string:
                 for monster in self.cur_monster:
                     if monster.name in string:
-                        self.player[0].meleeattack(monster)
+                        self.player[0].meleeAttack(monster)
             elif '소지품확인' in string:
                 if self.battle_status:
                     print('전투중엔 불가능합니다...')
@@ -254,7 +256,7 @@ class Master:
             self.log.append(Log(string))
 
     def monster_setter(self, name):  # 전투상황에 돌입하게 몬스터를 추가하는 함수입니다.
-        self.cur_monster.append(mob.Monster(name))
+        self.cur_monster.append(Monster(name))
         if self.battle_status:
             pass
         else:
