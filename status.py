@@ -233,6 +233,22 @@ class Status:
         self.wis_correction = cal(self.wis)
         self.cha_correction = cal(self.cha)
 
+    def correction_collector(self, name):  # 인수로 받은 스탯의 패널티의 총합을 반환하는 함수입니다.
+        if name == '근력':
+            result = self.str_correction + self.whole_penalty + self.temp_whole_penalty
+        elif name == '민첩':
+            result = self.dex_correction + self.whole_penalty + self.temp_whole_penalty
+        elif name == '체력':
+            result = self.con_correction + self.whole_penalty + self.temp_whole_penalty
+        elif name == '지식':
+            result = self.int_correction + self.whole_penalty + self.temp_whole_penalty
+        elif name == '지혜':
+            result = self.wis_correction + self.whole_penalty + self.temp_whole_penalty
+        else:
+            result = self.cha_correction + self.whole_penalty + self.temp_whole_penalty
+        self.temp_whole_penalty = 0
+        return result
+
     def stat_correction_controller(self, name, num):  # 스탯보정을위한 추가 함수입니다.
         if name == '근력':
             self.str_correction += num

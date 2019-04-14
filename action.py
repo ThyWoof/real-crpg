@@ -34,9 +34,9 @@ class Action:  # 모든 액션을 담는 클래스입니다.
 
     def meleeAttack(self, op, character):  # 기본적으로 근력판정, 10 이상은 공격후 회피(혹은 빈틈을 주고 1d6딜 추가) 7~9는 공격성공후 빈틈
         if character.status.micro_attack:
-            correction = character.status.dex_correction
+            correction = character.status.correction_collector('민첩')
         else:
-            correction = character.status.str_correction
+            correction = character.status.correction_collector('근력')
         roll = rollDice(2, 6, correction)
         if roll > 9:
             choose = int(input('공격은 멋들어지게 들어갈것같습니다! 어떻게 할까요??\n1.공격을 명중시킨뒤 회피\n2.빈틈을 보이고 1d6 피해를 더주기\n: '))
@@ -73,8 +73,16 @@ class Action:  # 모든 액션을 담는 클래스입니다.
     def defense(self):  # 사람,물건,장소를 지키는 액션, 체력판정, 10+ 예비3점 7~9 예비1점
         pass            # 방어태세동안 대상이 공격받을시 예비1점 소모로 한가지선택 / 대신맞음,피해나효과 반으로, 공격자빈틈만들어, 지정한 우리편 캐릭터의 다음판정 +1, 자기레벨만큼 피해를 상대에게 가함
 
-    def stagKnowledge(self):  # 지식더듬기, 지식판정을해서 10+ 유용한 사실 7~9 흥미롭기만한 사실
-        pass
+    def stagKnowledge(self, character, stuff):  # 지식더듬기, 지식판정을해서 10+ 유용한 사실 7~9 흥미롭기만한 사실
+        result = rollDice(2, 6, character.status.correction_collector('지식'))
+        if result > 9:
+            print(stuff[1], stuff[2])
+        elif result > 6:
+            print(stuff[1])
+        else:
+            print('아무리 머리를 쥐어짜도 이름말곤 아는게 없군요...')
+            character.status.curexp_controller(1)
+
 
     def graspSituatino(self):  # 상황파악, 지혜판정 10+ 3개선택, 7~9 1개선택 /여기서 최근무슨일?,무슨일이 일어나려고하는가?,어떤것에 주의를 기울여야하는가?, 여기서 나에게 유용하거나 값진것은 무엇?, 이 상황은 누가 장악?, 여기서 겉보기와 다른것은 무엇?
         pass
@@ -145,9 +153,6 @@ class Action:  # 모든 액션을 담는 클래스입니다.
 
     def practice(self):  # 1~2주시간을보내면 예비1점, 1개월 3점 , 수련성과가 드러난상황에서 얘비를 사용해 판정에 +1
         pass  # 한 판정에 예비는 한개밖에 못씀
-
-    def action_adder(self, name):  # 사용할수있는 액션을 추가해주는 함수입니다.
-        self.have.append(name)
 
     def check_body(self, character, op):  # 죽은 몬스터를 루팅하는 함수입니다.
         money = op.stuff.pop(0)

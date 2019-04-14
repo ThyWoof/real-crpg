@@ -27,6 +27,7 @@ class Character:
 
     def check_body(self, monster):  # 몬스터 루팅을위한 함수
         self.action.check_body(self, monster)
+
     def equip(self, item):  # 무기장비를 위한함수입니다.
         if item.type == 'weapon':
             temp = self.status.weapon_unequip()
@@ -281,6 +282,10 @@ class Master:
                     print('전투중엔 불가능합니다...')
                     return
                 self.player[0].level_up()
+            elif '지식더듬기' in string:
+                for stuff in resource.knowledge:
+                    if stuff[0] in string:
+                        self.player[0].action.stagKnowledge(self.player[0], stuff)
             self.alive_monster_checker()
             self.log.append(Log(string, self.battle_status, False, True))
 
