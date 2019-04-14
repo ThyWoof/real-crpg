@@ -5,7 +5,7 @@ import resource
 from inventory import Inventory
 from status import Status
 from monster import Monster
-from action import Action
+from action import *
 from dice import rollDice
 
 
@@ -13,7 +13,10 @@ class Character:
     def __init__(self, name, cls, race, stat, value, description):  # 기본적인 캐릭터의 정보생성자입니다.
         self.status = Status(name, cls, race, stat[0], stat[1], stat[2],stat[3], stat[4], stat[5], value, description)
         self.inventory = Inventory()
-        self.action = Action()
+        if cls == '전사':
+            self.action = Worrior()
+        else:
+            pass
 
     def show_info(self):  # /캐릭터확인 명령어를위한 함수입니다.
         self.status.show_status(self.inventory)
@@ -24,7 +27,6 @@ class Character:
 
     def check_body(self, monster):  # 몬스터 루팅을위한 함수
         self.action.check_body(self, monster)
-
     def equip(self, item):  # 무기장비를 위한함수입니다.
         if item.type == 'weapon':
             temp = self.status.weapon_unequip()
@@ -46,19 +48,37 @@ class Character:
                 self.inventory.item_setter(self.status.shield_unequip())
         self.status.equip(self.inventory.item_getter(item.name))
 
+    def level_up(self):  # 레벨업 함수입니다.
+        if self.status.level == 10:
+            print('더이상 레벨업 할수 없어보이는군요..')
+            return
+        else:
+            reduce = self.status.level + 7
+            if reduce > self.status.cur_exp:
+                print('경험치가 부족해보입니다...')
+                return
+        self.status.curexp_controller(-reduce)
+        self.status.level_up()
+        self.action.level_up(self)
+
 
 class Place:
     pass
 
 
 class Log:
-    def __init__(self, string):
+    def __init__(self, string, battle, master, script):
         self.timestamp = dt.datetime.now()
-       # self.type = type  # 문장의 타입을 담는 합수 / 예: 전투, 대화, 상황묘사
+        self.battle = battle  # 문장의 타입을 담는 합수 / 예: 전투, 대화, 상황묘사
+        self.master = master
+        self.script = script
         self.sentence = string
 
     def get_log(self):
-        return str(self.timestamp) + ') ' + self.sentence
+        return self.get_time() + ') ' + self.sentence
+
+    def get_time(self):
+        return str(self.timestamp.hour) + ':' + str(self.timestamp.minute) + ':' + str(self.timestamp.second)
 
 
 def show_and_select(list):  # 보기를 나열하고 선택해서 반환하는 함수
@@ -226,6 +246,10 @@ class Master:
             elif string == '/몬스터추가':
                 name = input('name : ')
                 self.monster_setter(name)
+            elif string == '/레벨업테스트':
+                self.player[0].status.curexp_controller(-7)
+                self.player[0].status.level_up()
+                self.player[0].action.level_up(self.player[0])
 
         else:
             if '근접공격' in string:
@@ -252,8 +276,13 @@ class Master:
                             print('{} 을(를) 착용합니다.'.format(item.name))
                             self.player[0].equip(item)
                             break
+            elif '레벨업' in string:
+                if self.battle_status:
+                    print('전투중엔 불가능합니다...')
+                    return
+                self.player[0].level_up()
             self.alive_monster_checker()
-            self.log.append(Log(string))
+            self.log.append(Log(string, self.battle_status, False, True))
 
     def monster_setter(self, name):  # 전투상황에 돌입하게 몬스터를 추가하는 함수입니다.
         self.cur_monster.append(Monster(name))

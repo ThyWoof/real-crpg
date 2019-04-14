@@ -16,7 +16,7 @@ class Monster:
                 self.features = []
                 self.dead = False
                 self.stuff = [3, item.Weapon('레이피어'), item.Armor('사슬 갑옷')]
-                self.far = None
+                self.distance = None
                 self.add_dam = 0
                 if len(i) > 7:
                     self.features = i[7:-1]
@@ -48,8 +48,18 @@ class Monster:
         return correction_damage
 
     def coming_for_you(self):
-        if self.far != '한걸음':
+        if self.distance == '몇걸음':
+            self.distance = '한걸음'
+        elif self.distance == '한걸음':
             pass
+
+    def distance_controller(self, distance):
+        if distance == '한걸음' and self.distance != distance:
+            self.distance = distance
+        elif distance == '반걸음' and self.distance != distance:
+            self.distance = distance
+        elif distance == '몇걸음' and self.distance != distance:
+            self.distance = distance
 
     def normal_attack(self):  # 일반공격으로 선공당했을때의 함수입니다.
         pass

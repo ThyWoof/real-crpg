@@ -60,6 +60,7 @@ class Action:  # 모든 액션을 담는 클래스입니다.
             self.get_attack(op, character.status)
         else:
             print('{}는 공격을 피하곤 반격해왔다!'.format(op.name))
+            character.status.curexp_controller(1)
             self.get_attack(op, character.status)
         return roll
 
@@ -109,8 +110,19 @@ class Action:  # 모든 액션을 담는 클래스입니다.
     def traveling(self):  # 험난한여정, 일행을 길잡이,척후,보급으로 정하고 비는 파트는 6판정 지혜판정이며 척후의경우 기습을10+로 기습을할수있음
         pass
 
-    def levelUp(self):  # 쉴 시간이 있고 경험치가 현재레벨+7 이상인경우 렙업, 고급액션(법사는주문)하나 선택, 능력치1증가 최대 18
-        pass
+    def level_up(self, character):  # 쉴 시간이 있고 경험치가 현재레벨+7 이상인경우 렙업, 고급액션(법사는주문)하나 선택, 능력치1증가 최대 18
+        print('다음은 고급액션을 골라주세요.')
+        for idx, action in enumerate(resource.worrior_high_action):
+            if action[0] in self.have:
+                pass
+            else:
+                print('{}. {} / {}'.format(idx + 1, action[0], action[1]))
+        while True:
+            choose = int(input('무엇을 고르시겠습니까? : '))
+            choose2 = int(input('{}. {}가 맞습니까?\n1.네 2.아니오 : '.format(choose, resource.worrior_high_action[choose - 1][0])))
+            if choose2 == 1:
+                self.have.append(resource.worrior_high_action[choose - 1][0])
+                break
 
     def throwParty(self):  # 100골드를 써서 2d6을 굴림, 추가100골드당 +1판정 10+일때 세가지, 7~9한가지 6-한가지 고르지만 뭔가 크게잘못됨
         pass  # /도움이 되는 NPC와 친해짐, 좋은기회의 소문을 들음, 유용한정보를 얻음, 축하연도중 나쁜일이 안생김
@@ -149,7 +161,89 @@ class Action:  # 모든 액션을 담는 클래스입니다.
 
 
 class Worrior(Action):
-    pass
+    def meleeAttack(self, op, character):  # 기본적으로 근력판정, 10 이상은 공격후 회피(혹은 빈틈을 주고 1d6딜 추가) 7~9는 공격성공후 빈틈
+        if character.status.micro_attack:
+            correction = character.status.dex_correction
+        else:
+            correction = character.status.str_correction
+        roll = rollDice(2, 6, correction)
+        if roll > 9:
+            choose = int(input('공격은 멋들어지게 들어갈것같습니다! 어떻게 할까요??\n1.공격을 명중시킨뒤 회피\n2.빈틈을 보이고 1d6 피해를 더주기\n: '))
+            if choose == 1:
+                print('{}은(는) {}을(를) 공격한뒤 {}의 공격을 회피했다!'.format(character.status.name, op.name, op.name))
+                damage = rollDice(1, character.status.damage_dice, character.status.damage_correction) + self.no_mercy()
+                print('{}의 피해를 {}에게 주었다.'.format(op.get_damage(damage), op.name))
+                self.give_damamge(damage)
+            else:
+                print('{}은(는) {}을(를) 강하게 공격했다!'.format(character.status.name, op.name))
+                damage = rollDice(1, character.status.damage_dice, character.status.damage_correction)
+                damage += rollDice(1, 6, 0) + self.no_mercy()
+                print('{}의 피해를 {}에게 주었다.'.format(op.get_damage(damage), op.name))
+                self.give_damamge(damage)
+                self.get_attack(op, character.status)
+        elif roll > 6:
+            print('{}은(는) {}를 공격했다! 하지만 헛점을 보이고 말았다'.format(character.status.name, op.name))
+            damage = rollDice(1, character.status.damage_dice, character.status.damage_correction) + self.no_mercy()
+            print('{}의 피해를 {}에게 주었다.'.format(op.get_damage(damage), op.name))
+            self.give_damamge(damage)
+            self.get_attack(op, character.status)
+        else:
+            print('{}는 공격을 피하곤 반격해왔다!'.format(op.name))
+            character.status.curexp_controller(1)
+            self.get_attack(op, character.status)
+        return roll
+
+    def level_up(self, character):  # 쉴 시간이 있고 경험치가 현재레벨+7 이상인경우 렙업, 고급액션(법사는주문)하나 선택, 능력치1증가 최대 18
+        print('다음은 고급액션을 골라주세요.')
+        for idx, action in enumerate(resource.worrior_high_action):
+            if action[0] in self.have:
+                pass
+            else:
+                print('{}. {} / {}'.format(idx + 1, action[0], action[1]))
+        while True:
+            choose = int(input('무엇을 고르시겠습니까? : '))
+            name = resource.worrior_high_action[choose - 1][0]
+            choose2 = int(input('{}. {}가 맞습니까?\n1.네 2.아니오 : '.format(choose, name)))
+            if choose2 == 1:
+                self.have.append(resource.worrior_high_action[choose - 1][0])
+                break
+        if name == '무쇠의 몸':
+            self.iron_body(character)
+
+    def no_mercy(self):  # 무자비 고급액션이 활성화되어있을때 추가피해를 더하는 함수입니다.
+        if '무자비' in self.have and '살기등등' not in self.have:
+            return rollDice(1, 4, 0)
+        else:
+            return 0
+
+    def weapon_spirit(self):  # 병기의 영 고급액션, 고유병기에게 말을 걸었을떄 +매 판정으로 추가상황파악가능
+        pass
+
+    def defense_knowhow(self):  # 방어의 요령 고급액션, 방어구를 앞세워 피해를 막으면 피해는 무시되고 장갑 -1 장갑 0 이될시 아이템파괴
+        pass
+
+    def enchant_weapon(self):  # 무기강화 고급액션, 고유병기의 특징 추가
+        pass
+
+    def worriors_eyes(self):  # 전사의 눈 고급액션, 전투중 상황파악시 판정에 +1
+        pass
+
+    def threaten(self):  # 협박 고급액션, 폭력으로 협상을할때 +매 대신 +근 판정으로 협상
+        pass
+
+    def blood_smell(self):  # 피의향기 고급액션, 접근전시 같은상대로의 다음공격은 +1d4피해 추가
+        pass
+
+    def iron_body(self, character):  # 무쇠의 몸 고급액션, 장갑 +1
+        character.status.armor_controller(1)
+
+    def multi_class1(self):  # 다중직업 초급 고급액션, 다은직업액션 하나 선택
+        pass
+
+    def black_smith(self):  # 대장장이 고급액션, 마법무기를 파괴하고 고유병기에 그 마법성질을 추가
+        pass
+
+
 
 class Bard(Action):
     pass

@@ -69,33 +69,25 @@ class Status:
         self.basic_stat_correction_updater()
 
     def level_up(self):
-        if self.level == 10:
-            print('더이상 레벨업 할수 없어보이는군요..')
-        else:
-            reduce = self.level + 7
-            if reduce > self.cur_exp:
-                print('경험치가 부족해보입니다...')
-            else:
-                self.cur_exp -= reduce
-                print('근력 : {} ({})\n'
+        print('근력 : {} ({})\n'
               '민첩 : {} ({})\n'
               '체력 : {} ({})\n'
               '지혜 : {} ({})\n'
               '지식 : {} ({})\n'
               '매력 : {} ({})\n'.format(self.str, self.stat_correction_getter(self.str_correction),
-                                      self.dex, self.stat_correction_getter(self.dex_correction),
-                                      self.con, self.stat_correction_getter(self.con_correction),
-                                      self.wis, self.stat_correction_getter(self.wis_correction),
-                                      self.int, self.stat_correction_getter(self.int_correction),
-                                      self.cha, self.stat_correction_getter(self.cha_correction)))
-                while True:
-                    answer = input('이중 어느것을 올리시겠습니까? : ')
-                    for i in resource.status_name:
-                        if i in answer:
-                            answer = i
-                    if self.stat_controller(answer, 1):
-                        print('{} 능력치가 1 올라갑니다.'.format(i))
-                        break
+                              self.dex, self.stat_correction_getter(self.dex_correction),
+                              self.con, self.stat_correction_getter(self.con_correction),
+                              self.wis, self.stat_correction_getter(self.wis_correction),
+                              self.int, self.stat_correction_getter(self.int_correction),
+                              self.cha, self.stat_correction_getter(self.cha_correction)))
+        while True:
+            answer = input('이중 어느것을 올리시겠습니까? : ')
+            for i in resource.status_name:
+                if i in answer:
+                    answer = i
+            if self.stat_controller(answer, 1):
+                print('{} 능력치가 1 올라갑니다.'.format(answer))
+                break
         self.level += 1
 
     def show_status(self, inventory):
@@ -112,7 +104,7 @@ class Status:
               '매력 : {} ({})\n'
               '피해주사위 : d{}\n'
               '피해 보정치 : {}\n'
-              '소지 경험치 : {}\n'
+              '소지 경험치 : {} 점\n'
               '소지 무게 : {} / {}\n'
               '소지 금 : {}\n'
               '장갑 : {}\n'
@@ -282,7 +274,7 @@ class Status:
 
     def weapon_unequip(self):  # 무기 해제 함수입니다.
         temp = self.equip_w
-        self.equip(item.Weapon('주먹'))
+        self.equip(Weapon('주먹'))
         if '정밀' in temp.tag:
             self.micro_attack_changer()
         if temp.name == '주먹':
@@ -299,7 +291,7 @@ class Status:
         temp = self.equip_a
         if temp.name == '없음':
             return
-        self.equip(item.Armor('없음'))
+        self.equip(Armor('없음'))
         self.armor_controller(-temp.armor)
         if temp.tag == '불편':
             self.penalty_controller(-1)
@@ -307,7 +299,7 @@ class Status:
 
     def shiled_unequip(self):  # 방패 해제 함수입니다.
         temp = self.equip_s
-        self.equip(item.Shild('없음'))
+        self.equip(Shield('없음'))
         self.armor_controller(-temp.armor)
         if temp.tag == '불편':
           self.penalty_controller(-1)
@@ -340,6 +332,11 @@ class Status:
 
     def curexp_controller(self, num):  # 현재 경험치를 조정하는 함수입니다.
         self.cur_exp += num
+        if num > 0:
+            string = '+' + str(num)
+        else:
+            string = str(num)
+        print('경험치가 {} 되었습니다.'.format(string))
 
     def weightlimit_controller(self, num):  # 최대 소지무게를 조정하는 함수입니다.
         self.weight_limit += num
