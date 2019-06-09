@@ -63,10 +63,6 @@ class Character:
         self.action.level_up(self)
 
 
-class Place:
-    pass
-
-
 class Log:
     def __init__(self, string, battle, master, script):
         self.timestamp = dt.datetime.now()
