@@ -7,6 +7,7 @@ from status import Status
 from monster import Monster
 from action import *
 from dice import rollDice
+from session import *
 
 
 class Character:
@@ -116,6 +117,7 @@ class Session:  # 세션을 담습니다.
 class Master:
     def __init__(self):  # 마스터의 생성자로, 플레이어 캐릭터와, 세션, 장소들을 담고있습니다.
         self.player = []
+        self.player_location = None
         self.cur_session = ''#Session('튜토리얼')
         self.cur_monster = []
         self.place = []
@@ -282,6 +284,26 @@ class Master:
                 for stuff in resource.knowledge:
                     if stuff[0] in string:
                         self.player[0].action.stagKnowledge(self.player[0], stuff)
+            elif '이동' in string:
+                if self.battle_status:
+                    print('전투중엔 불가능합니다...')
+                    return
+                else:
+                    if '세이룬' in string:
+                        print('세이룬으로 이동합니다.')
+                        self.set_location(vill)
+                        vill.is_player_here = True
+                    elif '부드러운 검' in string:
+                        print("'부드러운 검'여관 내부로 들어갔습니다.")
+                        for store in vill.inn:
+                            if store.name == '부드러운 검':
+                                break
+                        store.npc.say_hello()
+                        store.npc.say_intro()
+
+            elif '두리번' in string:
+                self.player_location.show_info()
+
             self.alive_monster_checker()
             self.log.append(Log(string, self.battle_status, False, True))
 
@@ -309,10 +331,15 @@ class Master:
     def session_setter(self, name):  # 세션을 추가합니다.
         self.cur_session = Session(name)
 
+    def set_location(self, place):
+        self.player_location = place
+        self.cur_monster = []
+
 
 DM = Master()
 DM.player.append(Character('테스트', '전사', '엘프', [16, 15, 13, 12, 9, 8], '선', '메롱'))
 DM.monster_setter('고블린')
+vill = Village('세이룬')
 
 if __name__ == '__main__':
     while True:

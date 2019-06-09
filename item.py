@@ -99,7 +99,6 @@ class Item:
                 if i[4] == '느림':
                     self.late = True
                 else: self.late = False
-        print('{} 이/가 가방에 추가되었습니다.'.format(name))
 
     def use_this(self):
         self.pcs -= 1
