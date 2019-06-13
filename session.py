@@ -18,8 +18,18 @@ class Village:
         print("두리번 거려보니 저기에 35년 전통을 자랑하는 '부드러운 검' 여관이 있는것이 보이는군요.")
 
 
-class Map:
-    pass
+class Spot:
+    def __init__(self):
+        pass
+
+    def show_info(self):
+        pass
+
+
+class TrainingCenter:
+    def __init__(self):
+        pass
+
 
 class Npc:
     def __init__(self, name, age, gender, script, store=None):  # NPC캐릭터의 이름, 나이, 대화내용들을 준비합니다.

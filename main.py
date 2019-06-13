@@ -101,19 +101,6 @@ def script_reader(list):  # 스크립트를 출력해주는 함수입니다.
         input()
 
 
-class Session:  # 세션을 담습니다.
-    def __init__(self, name):  # 리소스에 미리 설정된 데이터를 이름으로 검색해, 속성에 담습니다.
-        for i in resource.session:
-            if i[0] == name:
-                self.session = i
-                break
-        self.name = name
-        self.monster = []
-        for i in range(self.session[2]):
-            self.monster.append(Monster(self.session[1]))
-        script_reader(self.session[3])
-
-
 class Master:
     def __init__(self):  # 마스터의 생성자로, 플레이어 캐릭터와, 세션, 장소들을 담고있습니다.
         self.player = []
@@ -264,7 +251,7 @@ class Master:
                         self.player[0].check_body(i)
                         self.monster_remover(i)
                     else:
-                        print('주변에 죽어있지 않은듯합니다.')
+                        print('주변에 죽어있지 않은듯하군요...')
             elif '착용' in string:
                 if self.battle_status:
                     print('전투중엔 불가능합니다...')
