@@ -21,4 +21,4 @@ class Inventory:  # 인벤토리 클래스입니다.
         if temp + num < 0:
             print('소지금이 부족한듯싶군요...')
         else:
-            self.money = temp
+            self.money += temp

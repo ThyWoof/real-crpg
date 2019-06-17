@@ -278,6 +278,8 @@ class Master:
                 else:
                     if '세이룬' in string:
                         print('세이룬으로 이동합니다.')
+                        print('세이룬 성문에 도착하자 당신 일행을 알아본 문지기가\n'
+                              '재미 없다는듯 눈길한번을 안주며 지나가라고 손짓합니다.')
                         self.set_location(vill)
                         vill.is_player_here = True
                     elif '부드러운 검' in string:

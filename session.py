@@ -1,6 +1,7 @@
 ﻿#import random as rd
 import resource
 from item import Item
+from monster import *
 
 class Session:
     pass
@@ -26,9 +27,16 @@ class Spot:
         pass
 
 
-class TrainingCenter:
+class Dungeon:
     def __init__(self):
         pass
+
+
+class TrainingCnter(Dungeon):
+    def __init__(self):
+        self.name = "연습투기장"
+        self.visit_count = 0
+        self.first_wave = [Monster('고블린'), Monster('고블린')]
 
 
 class Npc:
