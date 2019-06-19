@@ -37,6 +37,8 @@ class TrainingCnter(Dungeon):
         self.name = "연습투기장"
         self.visit_count = 0
         self.first_wave = [Monster('고블린'), Monster('고블린')]
+        self.second_wave = None
+        self.quest = None
 
 
 class Npc:
