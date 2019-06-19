@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../exel-analy-sys/.idea/exel-analy-sys.iml" filepath="$PROJECT_DIR$/../exel-analy-sys/.idea/exel-analy-sys.iml" />
+      <module fileurl="file://$USER_HOME$/iCloudDrive/iCloud~com~omz-software~Pythonista3/.idea/iCloud~com~omz-software~Pythonista3.iml" filepath="$USER_HOME$/iCloudDrive/iCloud~com~omz-software~Pythonista3/.idea/iCloud~com~omz-software~Pythonista3.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/real-crpg.iml" filepath="$PROJECT_DIR$/.idea/real-crpg.iml" />
     </modules>
   </component>
