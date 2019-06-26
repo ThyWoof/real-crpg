@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="43a7a010-3ded-4e34-8fbb-99d00fdd904e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../exel-analy-sys/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../exel-analy-sys/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/real-crpg.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/real-crpg.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exel-analy-sys/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../exel-analy-sys/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,14 +12,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.6808989">
+    <splitter split-orientation="horizontal" split-proportion="0.4394099">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/../exel-analy-sys/main.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="646">
-                  <caret line="34" column="11" selection-start-line="34" selection-start-column="11" selection-end-line="34" selection-end-column="11" />
+                <state relative-caret-position="573">
+                  <caret line="130" selection-start-line="130" selection-end-line="130" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                   </folding>
@@ -34,17 +30,34 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/../exel-analy-sys/config.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret column="28" selection-start-column="28" selection-end-column="28" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
+        <splitter split-orientation="horizontal" split-proportion="0.5">
+          <split-first>
+            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+              <file pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/../exel-analy-sys/config.py">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="19">
+                      <caret line="1" column="26" selection-start-line="1" selection-start-column="26" selection-end-line="1" selection-end-column="26" />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-first>
+          <split-second>
+            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+              <file pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/../exel-analy-sys/기획">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="437">
+                      <caret line="23" column="13" lean-forward="true" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-second>
+        </splitter>
       </split-second>
     </splitter>
   </component>
@@ -66,13 +79,14 @@
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/status.py" />
         <option value="$PROJECT_DIR$/../exel-analy-sys/config.py" />
+        <option value="$PROJECT_DIR$/../exel-analy-sys/기획" />
         <option value="$PROJECT_DIR$/../exel-analy-sys/main.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="641" />
-    <option name="y" value="-17" />
+    <option name="x" value="435" />
+    <option name="y" value="352" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
@@ -81,33 +95,7 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="real-crpg" type="b2602c69:ProjectViewProjectNode" />
-              <item name="real-crpg" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="real-crpg" type="b2602c69:ProjectViewProjectNode" />
-              <item name="exel-analy-sys" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="real-crpg" type="b2602c69:ProjectViewProjectNode" />
-              <item name="iCloud~com~omz-software~Pythonista3" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="real-crpg" type="b2602c69:ProjectViewProjectNode" />
-              <item name="iCloud~com~omz-software~Pythonista3" type="462c0819:PsiDirectoryNode" />
-              <item name="생활 어플" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -187,11 +175,18 @@
       <option name="presentableId" value="Default" />
       <updated>1559950574705</updated>
     </task>
+    <task id="LOCAL-00001" summary="just start">
+      <created>1560953863008</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1560953863008</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.1784188" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -204,13 +199,36 @@
       <window_info anchor="bottom" id="TODO" order="5" />
       <window_info anchor="bottom" id="Version Control" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" weight="0.329718" />
       <window_info anchor="bottom" id="Python Console" order="9" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info active="true" anchor="right" x="793" y="215" width="634" height="723" id="Run" internal_type="SLIDING" order="3" visible="true" weight="0.40245202" />
+      <window_info active="true" anchor="right" x="793" y="215" width="634" height="723" id="Run" internal_type="SLIDING" order="3" visible="true" weight="0.2457356" />
     </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" weight="0.1784188" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="5" />
+      <window_info anchor="bottom" id="Version Control" order="6" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" weight="0.329718" />
+      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info active="true" anchor="right" x="793" y="215" width="634" height="723" id="Run" internal_type="SLIDING" order="3" visible="true" weight="0.2457356" />
+    </layout-to-restore>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="just start" />
+    <option name="LAST_COMMIT_MESSAGE" value="just start" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/dice.py">
@@ -291,17 +309,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../exel-analy-sys/기획">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="23" column="13" lean-forward="true" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../exel-analy-sys/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="28" selection-start-column="28" selection-end-column="28" />
+        <state relative-caret-position="19">
+          <caret line="1" column="26" selection-start-line="1" selection-start-column="26" selection-end-line="1" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../exel-analy-sys/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="34" column="11" selection-start-line="34" selection-start-column="11" selection-end-line="34" selection-end-column="11" />
+        <state relative-caret-position="573">
+          <caret line="130" selection-start-line="130" selection-end-line="130" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
