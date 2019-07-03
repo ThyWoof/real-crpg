@@ -301,10 +301,7 @@ class Master:
             self.battle_status = False
 
     def battle_status_changer(self):  # 전투상황으로 돌입하는 함수입니다.
-        if self.battle_status:
-            self.battle_status = False
-        else:
-            self.battle_status = True
+        self.battle_status = False if self.battle_status is True else True
 
     def session_setter(self, name):  # 세션을 추가합니다.
         self.cur_session = Session(name)

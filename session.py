@@ -69,6 +69,12 @@ class NpcSctipt:
         self.bye = bye
 
 
+class Dungeon:
+    def __init__(self):
+        self.name = name
+        self.
+
+
 def test_code():
     name = "랄프"
     age = 41
