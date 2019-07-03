@@ -167,20 +167,20 @@ class Status:
 
     def stat_controller(self, name, num):  # 레벨업 등의 사유로 스탯 증감을 위한 함수입니다.
         if name == '근력':
-            if self.str == 18 and u_o_d == 'u':
-                print('더이상 힘을 올릴수 없습니다.')
+            if self.str == 18:
+                print('더이상 근력을 올릴수 없습니다.')
                 return False
             else:
                 self.str += num
                 self.weight_limit += num
         elif name == '민첩':
-            if self.dex == 18 and u_o_d == 'u':
+            if self.dex == 18:
                 print('더이상 민첩을 올릴수 없습니다.')
                 return False
             else:
                 self.dex += num
         elif name == '체력':
-            if self.con == 18 and u_o_d == 'u':
+            if self.con == 18:
                 print('더이상 체력을 올릴수 없습니다.')
                 return False
             else:
@@ -188,19 +188,19 @@ class Status:
                 self.max_hp += num
                 self.cur_hp = self.max_hp
         elif name == '지식':
-            if self.int == 18 and u_o_d == 'u':
+            if self.int == 18:
                 print('더이상 자식을 올릴수 없습니다.')
                 return False
             else:
                 self.int += num
         elif name == '지혜':
-            if self.wis == 18 and u_o_d == 'u':
+            if self.wis == 18:
                 print('더이상 지혜를 올릴수 없습니다.')
                 return False
             else:
                 self.wis += num
         elif name == '매력':
-            if self.cha == 18 and u_o_d == 'u':
+            if self.cha == 18:
                 print('더이상 매력을 올릴수 없습니다.')
                 return False
             else:
@@ -368,3 +368,6 @@ class Status:
 
     def penalty_controller(self, num):  # 전체 판정의 패널티를 조종하는 함수입니다.
         self.whole_penalty += num
+
+class Strength:
+    pass

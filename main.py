@@ -7,6 +7,7 @@ from status import Status
 from monster import Monster
 from action import *
 from dice import rollDice
+from session import *
 
 
 class Character:
@@ -100,22 +101,10 @@ def script_reader(list):  # 스크립트를 출력해주는 함수입니다.
         input()
 
 
-class Session:  # 세션을 담습니다.
-    def __init__(self, name):  # 리소스에 미리 설정된 데이터를 이름으로 검색해, 속성에 담습니다.
-        for i in resource.session:
-            if i[0] == name:
-                self.session = i
-                break
-        self.name = name
-        self.monster = []
-        for i in range(self.session[2]):
-            self.monster.append(Monster(self.session[1]))
-        script_reader(self.session[3])
-
-
 class Master:
     def __init__(self):  # 마스터의 생성자로, 플레이어 캐릭터와, 세션, 장소들을 담고있습니다.
         self.player = []
+        self.player_location = None
         self.cur_session = ''#Session('튜토리얼')
         self.cur_monster = []
         self.place = []
@@ -262,7 +251,7 @@ class Master:
                         self.player[0].check_body(i)
                         self.monster_remover(i)
                     else:
-                        print('주변에 죽어있지 않은듯합니다.')
+                        print('주변에 죽어있지 않은듯하군요...')
             elif '착용' in string:
                 if self.battle_status:
                     print('전투중엔 불가능합니다...')
@@ -282,6 +271,28 @@ class Master:
                 for stuff in resource.knowledge:
                     if stuff[0] in string:
                         self.player[0].action.stagKnowledge(self.player[0], stuff)
+            elif '이동' in string:
+                if self.battle_status:
+                    print('전투중엔 불가능합니다...')
+                    return
+                else:
+                    if '세이룬' in string:
+                        print('세이룬으로 이동합니다.')
+                        print('세이룬 성문에 도착하자 당신 일행을 알아본 문지기가\n'
+                              '재미 없다는듯 눈길한번을 안주며 지나가라고 손짓합니다.')
+                        self.set_location(vill)
+                        vill.is_player_here = True
+                    elif '부드러운 검' in string:
+                        print("'부드러운 검'여관 내부로 들어갔습니다.")
+                        for store in vill.inn:
+                            if store.name == '부드러운 검':
+                                break
+                        store.npc.say_hello()
+                        store.npc.say_intro()
+
+            elif '두리번' in string:
+                self.player_location.show_info()
+
             self.alive_monster_checker()
             self.log.append(Log(string, self.battle_status, False, True))
 
@@ -306,10 +317,26 @@ class Master:
     def session_setter(self, name):  # 세션을 추가합니다.
         self.cur_session = Session(name)
 
+    def set_location(self, place):
+        self.player_location = place
+        self.cur_monster = []
+
+    def set_dungeon(self, dungeon):
+        for monster in dungeon.first_wave:
+            self.cur_monster.append(monster)
+        if self.battle_status:
+            pass
+        else:
+            self.battle_status_changer()
+
 
 DM = Master()
 DM.player.append(Character('테스트', '전사', '엘프', [16, 15, 13, 12, 9, 8], '선', '메롱'))
 DM.monster_setter('고블린')
+vill = Village('세이룬')
+dungeon = TrainingCnter()
+DM.set_dungeon(dungeon)
+
 
 if __name__ == '__main__':
     while True:
