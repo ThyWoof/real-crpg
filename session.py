@@ -31,6 +31,18 @@ class Dungeon:
     def __init__(self):
         pass
 
+    def getFirstWave(self):
+        temp = self.first_wave[::]
+        self.first_wave = None
+        return temp
+
+    def getInfo(self):
+        print(self.info)
+        print(self.more_info)
+
+    def setNpc(self):
+        pass
+
 
 class TrainingCnter(Dungeon):
     def __init__(self):
@@ -39,6 +51,8 @@ class TrainingCnter(Dungeon):
         self.first_wave = [Monster('고블린'), Monster('고블린')]
         self.second_wave = None
         self.quest = None
+        self.info = '이곳은 가두어놓은 괴물들이 우글우글 거립니다.\n가둔 이유는 돈을받고 신참들을 훈련시키기 위해서군요'
+        self.more_info = '고블린 두마리가 앞 철창에서 풀려나옵니다.'
 
 
 class Npc:
@@ -61,7 +75,7 @@ class Npc:
     def say_thankyou(self): # 감사하다고 출력합니다.
         print(self.script.thankyou)
 
-    def open_store(self, character):  # 해당 npc가 가지고있는 상품을 보여줍니다.
+    def open_store(self):  # 해당 npc가 가지고있는 상품을 보여줍니다.
         if self.store == None:
             print("소유하고 있는 상점이 없습니다.")
         else:
@@ -138,27 +152,11 @@ class NpcSctipt:
         self.bye = bye
 
 
-<<<<<<< HEAD
-class Dungeon:
-    def __init__(self):
-        self.name = name
-        self.
 
 
 def test_code():
-    name = "랄프"
-    age = 41
-    gender = "남"
-    script = NpcSctipt('안녕하시오', "감사하오", "나는 이 '부드러운 검' 여관을 20년간 지켜온 랄프라 하오", "안녕히 가시오", "퀘스트")
-    test = Npc(name, age, gender, script)
-    test.say_hello()
-    test.say_intro()
-    test.say_info()
-    test.open_store()
-    test.say_goodbye()
-    test_store = Store("부드러운 검", "여관")
-    test_store.set_npc(test)
-    test.open_store()
+
+    test = TrainingCnter()
+    test.getInfo()
+    print(test.getFirstWave())
 test_code()
-=======
->>>>>>> f4be0723840cbba400f531ced31d6880da09dedb
