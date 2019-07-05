@@ -44,7 +44,7 @@ class Dungeon:
         pass
 
 
-class TrainingCnter(Dungeon):
+class TrainingCenter(Dungeon):
     def __init__(self):
         self.name = "연습투기장"
         self.visit_count = 0
@@ -152,11 +152,9 @@ class NpcSctipt:
         self.bye = bye
 
 
-
-
 def test_code():
 
-    test = TrainingCnter()
+    test = TrainingCenter()
     test.getInfo()
     print(test.getFirstWave())
-test_code()
+#test_code()

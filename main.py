@@ -322,6 +322,8 @@ class Master:
         self.cur_monster = []
 
     def set_dungeon(self, dungeon):
+        print(dungeon.info)
+        print(dungeon.more_info)
         for monster in dungeon.first_wave:
             self.cur_monster.append(monster)
         if self.battle_status:
@@ -332,9 +334,9 @@ class Master:
 
 DM = Master()
 DM.player.append(Character('테스트', '전사', '엘프', [16, 15, 13, 12, 9, 8], '선', '메롱'))
-DM.monster_setter('고블린')
+#DM.monster_setter('고블린')
 vill = Village('세이룬')
-dungeon = TrainingCnter()
+dungeon = TrainingCenter()
 DM.set_dungeon(dungeon)
 
 
