@@ -322,9 +322,8 @@ class Master:
         self.cur_monster = []
 
     def set_dungeon(self, dungeon):
-        print(dungeon.info)
-        print(dungeon.more_info)
-        for monster in dungeon.first_wave:
+        dungeon.getInfo()
+        for monster in dungeon.getFirstWave():
             self.cur_monster.append(monster)
         if self.battle_status:
             pass

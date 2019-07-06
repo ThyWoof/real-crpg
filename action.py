@@ -2,6 +2,76 @@ import resource
 from dice import rollDice
 import random as rd
 
+
+class Actions:
+    def __init__(self):
+        pass
+
+    def got_damage(self, damage):
+        if damage > 5:
+            random_sentence_printer(resource.get_damage_sentence_hurt)
+        elif damage > 3:
+            random_sentence_printer(resource.get_damage_sentence_normal)
+        else:
+            random_sentence_printer(resource.get_damage_sentence_not_hurt)
+
+    def give_damamge(self, damage):
+        if damage > 5:
+            random_sentence_printer(resource.damage_sentence_good)
+        elif damage > 3:
+            random_sentence_printer(resource.damage_sentence_normal)
+        else:
+            random_sentence_printer(resource.damage_sentence_bad)
+
+    def get_attack(self, op, status):  # 반격당하는 함수입니다.
+        if op.dead:
+            print('{} 는 쓰러졌다'.format(op.name))
+        else:
+            damage = rollDice(op.damage_pcs, op.damage_dice, op.add_dam)
+            damage -= status.armor
+            self.got_damage(damage)
+            status.curhp_controller(self, -damage)
+
+    def activate(self):
+        pass
+
+class MeleeAttack(Actions):
+    def __init__(self):
+        self.name = '근접공격'
+
+    def meleeAttack(self, op, character):  # 기본적으로 근력판정, 10 이상은 공격후 회피(혹은 빈틈을 주고 1d6딜 추가) 7~9는 공격성공후 빈틈
+        if character.status.micro_attack:
+            correction = character.status.correction_collector('민첩')
+        else:
+            correction = character.status.correction_collector('근력')
+        roll = rollDice(2, 6, correction)
+        if roll > 9:
+            choose = int(input('공격은 멋들어지게 들어갈것같습니다! 어떻게 할까요??\n1.공격을 명중시킨뒤 회피\n2.빈틈을 보이고 1d6 피해를 더주기\n: '))
+            if choose == 1:
+                print('{}은(는) {}을(를) 공격한뒤 {}의 공격을 회피합니다!'.format(character.status.name, op.name, op.name))
+                damage = rollDice(1, character.status.damage_dice, character.status.damage_correction)
+                print('{}의 피해를 {}에게 주는군요.'.format(op.get_damage(damage), op.name))
+                self.give_damamge(damage)
+            else:
+                print('{}은(는) {}을(를) 강하게 공격합니다!'.format(character.status.name, op.name))
+                damage = rollDice(1, character.status.damage_dice, character.status.damage_correction)
+                damage += rollDice(1, 6, 0)
+                print('{}의 피해를 {}에게 주는군요.'.format(op.get_damage(damage), op.name))
+                self.give_damamge(damage)
+                self.get_attack(op, character.status)
+        elif roll > 6:
+            print('{}은(는) {}를 공격했다! 하지만 헛점을 보이고 말았다'.format(character.status.name, op.name))
+            damage = rollDice(1, character.status.damage_dice, character.status.damage_correction)
+            print('{}의 피해를 {}에게 주는군요.'.format(op.get_damage(damage), op.name))
+            self.give_damamge(damage)
+            self.get_attack(op, character.status)
+        else:
+            print('{}는 공격을 피하곤 반격해옵니다!'.format(op.name))
+            character.status.curexp_controller(1)
+            self.get_attack(op, character.status)
+        return roll
+
+
 class Action:  # 모든 액션을 담는 클래스입니다.
     def __init__(self):
         self.have =  ['근접공격', '원거리공격', '이동', '상황파악', '지식더듬기', '위험돌파', '방어', '협상', '야영',
@@ -41,25 +111,25 @@ class Action:  # 모든 액션을 담는 클래스입니다.
         if roll > 9:
             choose = int(input('공격은 멋들어지게 들어갈것같습니다! 어떻게 할까요??\n1.공격을 명중시킨뒤 회피\n2.빈틈을 보이고 1d6 피해를 더주기\n: '))
             if choose == 1:
-                print('{}은(는) {}을(를) 공격한뒤 {}의 공격을 회피했다!'.format(character.status.name, op.name, op.name))
+                print('{}은(는) {}을(를) 공격한뒤 {}의 공격을 회피합니다!'.format(character.status.name, op.name, op.name))
                 damage = rollDice(1, character.status.damage_dice, character.status.damage_correction)
-                print('{}의 피해를 {}에게 주었다.'.format(op.get_damage(damage), op.name))
+                print('{}의 피해를 {}에게 주는군요.'.format(op.get_damage(damage), op.name))
                 self.give_damamge(damage)
             else:
-                print('{}은(는) {}을(를) 강하게 공격했다!'.format(character.status.name, op.name))
+                print('{}은(는) {}을(를) 강하게 공격합니다!'.format(character.status.name, op.name))
                 damage = rollDice(1, character.status.damage_dice, character.status.damage_correction)
                 damage += rollDice(1, 6, 0)
-                print('{}의 피해를 {}에게 주었다.'.format(op.get_damage(damage), op.name))
+                print('{}의 피해를 {}에게 주는군요.'.format(op.get_damage(damage), op.name))
                 self.give_damamge(damage)
                 self.get_attack(op, character.status)
         elif roll > 6:
             print('{}은(는) {}를 공격했다! 하지만 헛점을 보이고 말았다'.format(character.status.name, op.name))
             damage = rollDice(1, character.status.damage_dice, character.status.damage_correction)
-            print('{}의 피해를 {}에게 주었다.'.format(op.get_damage(damage), op.name))
+            print('{}의 피해를 {}에게 주는군요.'.format(op.get_damage(damage), op.name))
             self.give_damamge(damage)
             self.get_attack(op, character.status)
         else:
-            print('{}는 공격을 피하곤 반격해왔다!'.format(op.name))
+            print('{}는 공격을 피하곤 반격해옵니다!'.format(op.name))
             character.status.curexp_controller(1)
             self.get_attack(op, character.status)
         return roll
