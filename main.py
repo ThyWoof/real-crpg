@@ -312,10 +312,7 @@ class Master:
             self.battle_status = False
 
     def battle_status_changer(self):  # 전투상황으로 돌입하는 함수입니다.
-        if self.battle_status:
-            self.battle_status = False
-        else:
-            self.battle_status = True
+        self.battle_status = False if self.battle_status is True else True
 
     def session_setter(self, name):  # 세션을 추가합니다.
         self.cur_session = Session(name)
@@ -325,7 +322,8 @@ class Master:
         self.cur_monster = []
 
     def set_dungeon(self, dungeon):
-        for monster in dungeon.first_wave:
+        dungeon.getInfo()
+        for monster in dungeon.getFirstWave():
             self.cur_monster.append(monster)
         if self.battle_status:
             pass
@@ -335,9 +333,9 @@ class Master:
 
 DM = Master()
 DM.player.append(Character('테스트', '전사', '엘프', [16, 15, 13, 12, 9, 8], '선', '메롱'))
-DM.monster_setter('고블린')
+#DM.monster_setter('고블린')
 vill = Village('세이룬')
-dungeon = TrainingCnter()
+dungeon = TrainingCenter()
 DM.set_dungeon(dungeon)
 
 

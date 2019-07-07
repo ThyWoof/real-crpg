@@ -31,14 +31,28 @@ class Dungeon:
     def __init__(self):
         pass
 
+    def getFirstWave(self):
+        temp = self.first_wave[::]
+        self.first_wave = None
+        return temp
 
-class TrainingCnter(Dungeon):
+    def getInfo(self):
+        print(self.info)
+        print(self.more_info)
+
+    def setNpc(self):
+        pass
+
+
+class TrainingCenter(Dungeon):
     def __init__(self):
         self.name = "연습투기장"
         self.visit_count = 0
         self.first_wave = [Monster('고블린'), Monster('고블린')]
         self.second_wave = None
         self.quest = None
+        self.info = '이곳은 가두어놓은 괴물들이 우글우글 거립니다.\n가둔 이유는 돈을받고 신참들을 훈련시키기 위해서군요'
+        self.more_info = '고블린 두마리가 앞 철창에서 풀려나옵니다.'
 
 
 class Npc:
@@ -61,7 +75,7 @@ class Npc:
     def say_thankyou(self): # 감사하다고 출력합니다.
         print(self.script.thankyou)
 
-    def open_store(self, character):  # 해당 npc가 가지고있는 상품을 보여줍니다.
+    def open_store(self):  # 해당 npc가 가지고있는 상품을 보여줍니다.
         if self.store == None:
             print("소유하고 있는 상점이 없습니다.")
         else:
@@ -138,3 +152,9 @@ class NpcSctipt:
         self.bye = bye
 
 
+def test_code():
+
+    test = TrainingCenter()
+    test.getInfo()
+    print(test.getFirstWave())
+#test_code()
